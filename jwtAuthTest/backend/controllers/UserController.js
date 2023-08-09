@@ -62,3 +62,16 @@ export const LoginUser = async (req, res) => {
         res.status(200).json({msg: 'Email tidak ditemukan'})
     }
 }
+
+export const LogoutUser = async(req, res) => {
+    try {
+        const result = await pool.query(`
+        SELECT * FROM users WHERE email = $1`, [req.body.email])
+        const user = result.rows[0]
+        const match = await bcrypt.compare(req.body.password, user.password)
+        if (!match) return res.status(400).json({msg: 'Password Anda Tidak Benar untuk Logout!'})
+        res.status(200).json({msg: 'Logout Berhasil'})
+    } catch (error) {
+        res.status(200).json({msg: 'Email tidak ditemukan'})
+    }
+}
