@@ -1,5 +1,6 @@
 import pool from '../config/Database.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 export const getUsers = async(req, res) => {
     try {
@@ -57,7 +58,15 @@ export const LoginUser = async (req, res) => {
         const user = result.rows[0]
         const match = await bcrypt.compare(req.body.password, user.password)
         if(!match) return res.status(400).json({msg: 'Password salah!'})
-        res.status(200).json({msg: 'Berhasil Login!'})
+        
+        //masuk ke pembuatan TOKEN
+        const userID = user.id
+        const nameID = user.name
+        const emailID = user.email
+        const passID = user.password
+        const accessTOKEN = jwt.sign({userID, nameID, emailID, passID}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '25s'})
+        const refreshTOKEN = jwt.sign({userID, nameID, emailID, passID}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1d'})
+        res.status(200).json({msg: 'Berhasil Login', accessTOKEN, refreshTOKEN})        
     } catch (error) {
         res.status(200).json({msg: 'Email tidak ditemukan'})
     }

@@ -8,6 +8,6 @@ router.post('/users', Regist)
 router.delete('/users/:id', DeleteAcc)
 router.post('/login', LoginUser)
 router.post('/logout', LogoutUser)
-
+// router.get('/token', )
 
 export default router
