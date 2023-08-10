@@ -7,7 +7,7 @@ export const verifyToken = async(req,res,next) => {
     try {
         const data = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         if (data){
-            next
+            next()
         }else{
             res.sendStatus(403)
         }
