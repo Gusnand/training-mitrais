@@ -14,3 +14,26 @@ export const getTodos = (req, res) => {
         res.status(403).json({msg: 'error dalam mengambil data'})
     }
 }
+
+export const createTodos = async(req,res) => {
+    const { title, description, status, deadline } = req.body
+    const query = `INSERT INTO todo (title, description, status, deadline, userid)
+    VALUES ($1, $2, $3, $4, $5)`
+    const values = [title, description, status, deadline, req.params.userid]
+
+    try {
+        await pool.query(query, values)
+        res.status(201).json({msg: 'Todo Dibuat!'})
+    } catch (error) {
+        res.status(500).json({error: 'an error occurred while creating the todo item.'})
+    }
+}
+
+export const deleteTodos = async (req,res) => {
+    try {
+        await pool.query(`DELETE FROM todo WHERE id=${req.params.id}`)
+        res.status(200).json({msg: `Todo dengan id ${req.params.id} berhasil dihapus`})
+    } catch (error) {
+        res.status(500).json({error: "Error!!!"})
+    }
+}
