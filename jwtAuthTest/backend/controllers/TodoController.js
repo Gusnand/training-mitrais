@@ -37,3 +37,22 @@ export const deleteTodos = async (req,res) => {
         res.status(500).json({error: "Error!!!"})
     }
 }
+
+export const updateTodos = async (req,res) => {
+    const {title, description, status, deadline} = req.body
+    const query = `UPDATE todo SET
+    title = $1,
+    description = $2,
+    status = $3,
+    deadline = $4,
+    userid = $5
+    WHERE id = $6`
+    const values = [title, description, status, deadline, req.params.userid, req.params.id]
+
+    try {
+        await pool.query(query, values)
+        res.status(200).json({msg: 'Todo Diupdate~'})
+    } catch (error) {
+        res.status(500).json({error: 'Error Occured ketika Update Todo!'})
+    }
+}

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-export const verifyTokenRefresh = (req,res,next) => {
+export const verifyRefreshToken = async(req,res,next) => {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
     if (token==null) return res.sendStatus(401)
@@ -9,9 +9,9 @@ export const verifyTokenRefresh = (req,res,next) => {
         if(data){
             next()
         }else{
-            res.sendStatus(403)
+            res.status(403).json({msg: 'data tidak ada'})
         }
     } catch (error) {
-        res.sendStatus(403)
+        res.status(403).json({msg: 'catch error verify reftoken'})
     }
 }

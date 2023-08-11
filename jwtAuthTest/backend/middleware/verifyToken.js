@@ -9,9 +9,9 @@ export const verifyToken = async(req,res,next) => {
         if (data){
             next()
         }else{
-            res.sendStatus(403)
+            res.status(403).json({msg: 'if (data) tidak ada.'})
         }
     } catch (error) {
-        res.sendStatus(403)
+        res.status(403).json({msg: 'catch error'})
     }
 }

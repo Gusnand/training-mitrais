@@ -64,7 +64,7 @@ export const LoginUser = async (req, res) => {
         const nameID = user.name
         const emailID = user.email
         const passID = user.password
-        const accessTOKEN = jwt.sign({userID, nameID, emailID, passID}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '3600s'})
+        const accessTOKEN = jwt.sign({userID, nameID, emailID, passID}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '50s'})
         const refreshTOKEN = jwt.sign({userID, nameID, emailID, passID}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1d'})
         res.status(200).json({msg: 'Berhasil Login', accessTOKEN, refreshTOKEN})        
     } catch (error) {
