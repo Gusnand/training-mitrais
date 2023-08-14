@@ -7,7 +7,7 @@ const Form = ({input, setInput, todos, setTodos }) => {
     }
 
     const onFormSubmit = (e) => {
-        e.prevent.default()
+        e.preventDefault()
         setTodos([...todos, {id: uuidV4(), title: input, completed: false}])
         setInput("")
     }
