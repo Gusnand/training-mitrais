@@ -16,6 +16,26 @@ const Todo = () => {
         fetchTodos()
     })
 
+    const getStatusString = (statusNumber) => {
+        let statusString;
+      
+       
+      
+        if (statusNumber === 0) {
+          statusString = 'Todo';
+        } else if (statusNumber === 1) {
+          statusString = 'In Progress';
+        } else if (statusNumber === 2) {
+          statusString = 'Done';
+        } else {
+          statusString = 'Unknown Status';
+        }
+      
+       
+      
+        return statusString;
+      };
+
   return (
     <section className="vh-100" style={{ backgroundColor: "#eee" }}>
     <div className="container py-5 h-100">
@@ -55,7 +75,7 @@ const Todo = () => {
                                 </td>
                                 <td className="align-middle">
                                 <h6 className="mb-0">
-                                    <span className="badge bg-danger">{todo.status}</span>
+                                    <span className="badge bg-info">{getStatusString(todo.status)}</span>
                                 </h6>
                                 </td>
                                 <td className="align-middle">
