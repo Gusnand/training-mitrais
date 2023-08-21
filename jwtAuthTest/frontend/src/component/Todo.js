@@ -1,25 +1,42 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
+import Modal from './Modal'
 
 const Todo = () => {
     const [todos, setTodos] = useState([])
+    const [editModalVisible, setEditModalVisible] = useState(false)
+    const [editingTodo, setEditingTodo] = useState(null)
+
+    const fetchTodos = async() => {
+      try {
+          const response = await axios.get(`http://localhost:5000/todo/3`)
+          setTodos(response.data)
+      } catch (error) {
+          console.log(error.message)
+      }
+    }
 
     useEffect(() => {
-        const fetchTodos = async() => {
-            try {
-                const response = await axios.get(`http://localhost:5000/todo/3`)
-                setTodos(response.data)
-            } catch (error) {
-                console.log(error.message)
-            }
-        }
         fetchTodos()
     })
 
+    const handleEditTodo = (todo) => {
+      setEditingTodo(todo)
+      setEditModalVisible(true)
+    }
+
+    const handleEditSubmit = async () => {
+      try {
+        await axios.post(`http://localhost:5000/todo/${updatedTodo.id}`, updatedTodo)
+        fetchTodos()
+        setEditModalVisible(false)
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+
     const getStatusString = (statusNumber) => {
         let statusString;
-      
-       
       
         if (statusNumber === 0) {
           statusString = 'Todo';
@@ -30,11 +47,18 @@ const Todo = () => {
         } else {
           statusString = 'Unknown Status';
         }
-      
-       
-      
+    
         return statusString;
       };
+
+    const handleDeleteTodo = async () => {
+      try {
+        await axios.delete(`http://localhost:5000/todo/${id}`)
+        fetchTodos()
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
 
   return (
     <section className="vh-100" style={{ backgroundColor: "#eee" }}>
@@ -51,8 +75,7 @@ const Todo = () => {
             <div
               className="card-body"
               data-mdb-perfect-scrollbar="true"
-              style={{ position: "relative", height: 400 }}
-            >
+              style={{ position: "relative", height: 400 }}>
               <table className="table mb-0">
                 <thead>
                   <tr>
@@ -82,15 +105,23 @@ const Todo = () => {
                                 <span>{todo.deadline}</span>
                                 </td>
                                 <td className="align-middle">
-                                <a href="#!" title="Done"><button>
-                                    <i className="fas fa-check text-success me-3" />
-                                    </button></a>
-                                <a href="#!"title="Edit">
-                                    <i className="fas fa-trash-alt text-danger" />
-                                </a>
-                                <a href="#!" title="Remove">
-                                    <i className="fas fa-trash-alt text-danger" />
-                                </a>
+                                <a href="#!" title="Done">
+                                  <button className="btn btn-success">
+                                      <i className="fas fa-check" />
+                                  </button>
+                              </a>
+
+                              <a href="#!" title="Edit" onClick={() => handleEditTodo(todo.id)}>
+                                  <button className="btn btn-warning">
+                                      <i className="fas fa-edit" />
+                                  </button>
+                              </a>
+
+                              <a href="#!" title="Remove">
+                                  <button className="btn btn-danger">
+                                      <i className="fas fa-trash-alt" />
+                                  </button>
+                              </a>
                                 </td>
                             </tr>
                         )
@@ -99,13 +130,13 @@ const Todo = () => {
               </table>
             </div>
             <div className="card-footer text-end p-3">
-              <button className="me-2 btn btn-link">Cancel</button>
               <button className="btn btn-primary">Add Task</button>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <Modal visible={editModalVisible} onClose={() => setEditModalVisible(false)} todo = {editingTodo}/>
   </section>
   
   )
